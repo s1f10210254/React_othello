@@ -19,15 +19,12 @@ const Home = () => {
 
     //2次元配列をコピーして新しいものをつくって変えてもOK！
     const newBoard: number[][] = JSON.parse(JSON.stringify(board));
-    //ターン変更
-    newBoard[y][x] = turnColor;
 
-    //循環的複雑度！！！！
-    //{turnColor === 1 ? setTurnColor(2) : setTurnColor(1)};
-    //setTurnColor((turnColor % 2) + 1);
-    //setTurnColor(3-turnColor);
-    //setTurnColor(2/turnColor);
-    setTurnColor(-turnColor + 3);
+    //下が相手の色だったら置ける
+    if (board[y + 1] !== undefined && board[y + 1][x] === 3 - turnColor) {
+      newBoard[y][x] = turnColor;
+      setTurnColor(-turnColor + 3);
+    }
 
     setBoard(newBoard);
   };
