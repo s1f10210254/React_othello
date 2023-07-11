@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Cell } from '../compornents/Cell';
 import styles from './index.module.css';
 
 const Home = () => {
@@ -170,15 +171,7 @@ const Home = () => {
       <div className={styles.board}>
         {board.map((row, y) =>
           row.map((color, x) => (
-            //記号番号
-            <div className={styles.cell} key={`${x}-${y}`} onClick={() => onClick(x, y)}>
-              {color !== 0 && (
-                <div
-                  className={styles.stone}
-                  style={{ background: color === 1 ? '#000' : '#fff' }}
-                />
-              )}
-            </div>
+            <Cell color={color} key={`${x}-${y}`} onClick={() => onClick(x, y)} />
           ))
         )}
       </div>
