@@ -26,6 +26,34 @@ export const useGame = () => {
     [-1, 1],
   ];
 
+  //候補地の座標返す
+  const getInditateCells = (direction: number[]) => {
+    for (let x = 0; x < 8; x++) {
+      for (let y = 0; y < 8; y++) {
+        if (board[y][x] === 0) {
+          //裏返せる石の座標リストとなる配列
+          const inditateCells = [];
+          const [mx, my] = direction;
+          let tempX = x + mx;
+          let tempY = y + my;
+
+          while (board[tempY] !== undefined && board[tempY][tempX] !== undefined) {
+            if (board[tempY][tempX] === 0) {
+              break;
+            } else if (board[tempY][tempX] === turnColor) {
+              return inditateCells;
+            } else {
+              inditateCells.push([y, x]);
+            }
+            tempX += mx;
+            tempY += my;
+          }
+        }
+      }
+    }
+    return [];
+  };
+
   //隣の相手の色が何個続いているか探し最後に自分の色があったら座標を渡す
   //引数として石を置く場所のX座標、Y座標、探索する方向を受け取る
   const checkFlipCells = (x: number, y: number, direction: number[]) => {
@@ -38,7 +66,7 @@ export const useGame = () => {
 
     while (board[tempY] !== undefined && board[tempY][tempX] !== undefined) {
       //8方向探索し、空セルが来た場合中止
-      if (board[tempY][tempX] === 0) {
+      if (board[tempY][tempX] === 0 || board[tempY][tempX] === 3) {
         break;
       }
       // 相手の色が続く場合flipCellsに一時的に配列を保存する
@@ -80,7 +108,21 @@ export const useGame = () => {
       return;
     }
 
-    //裏返せる石の座標を格納するための２次元配列'flippableCells'を初期化
+    //候補地の座標を格納する
+    // let candidateCells: number[][] = [];
+
+    // //directionsで格納した各方向から候補地をチェック
+    // for (const direction of directions) {
+    //   const cells = getInditateCells(direction);
+    //   candidateCells = [...candidateCells, ...cells];
+    // }
+    // //候補地を３にする
+    // console.log('candidatecell->', candidateCells);
+    // for (const [x, y] of candidateCells) {
+    //   board[x][y] = 3;
+    // }
+
+    //裏返せる石の座標を格納する
     let flippableCells: number[][] = [];
 
     //directionsで格納した各方向から裏返せる石をチェック
@@ -108,6 +150,7 @@ export const useGame = () => {
     //最後に手番を切り替える
     setTurnColor(3 - turnColor);
   };
+  console.table(board);
 
   return { board, onClick };
 };
