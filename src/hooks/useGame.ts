@@ -1,4 +1,5 @@
 import { useState } from 'react';
+//8方向の辞書
 
 export const useGame = () => {
   const [turnColor, setTurnColor] = useState(1);
@@ -13,7 +14,6 @@ export const useGame = () => {
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
-  //8方向の辞書
   const directions = [
     //上から時計回り
     [0, 1],
@@ -28,11 +28,10 @@ export const useGame = () => {
 
   //候補地の座標返す
   const getInditateCells = (direction: number[]) => {
+    const inditateCells = [];
     for (let x = 0; x < 8; x++) {
       for (let y = 0; y < 8; y++) {
         if (board[y][x] === 0) {
-          //裏返せる石の座標リストとなる配列
-          const inditateCells = [];
           const [mx, my] = direction;
           let tempX = x + mx;
           let tempY = y + my;
@@ -51,7 +50,7 @@ export const useGame = () => {
         }
       }
     }
-    return [];
+    return inditateCells;
   };
 
   //隣の相手の色が何個続いているか探し最後に自分の色があったら座標を渡す
@@ -108,19 +107,11 @@ export const useGame = () => {
       return;
     }
 
-    //候補地の座標を格納する
-    // let candidateCells: number[][] = [];
+    const candidateCells = getInditateCells([0, 1]);
 
-    // //directionsで格納した各方向から候補地をチェック
-    // for (const direction of directions) {
-    //   const cells = getInditateCells(direction);
-    //   candidateCells = [...candidateCells, ...cells];
-    // }
-    // //候補地を３にする
-    // console.log('candidatecell->', candidateCells);
-    // for (const [x, y] of candidateCells) {
-    //   board[x][y] = 3;
-    // }
+    if (candidateCells.length === 0) {
+      return;
+    }
 
     //裏返せる石の座標を格納する
     let flippableCells: number[][] = [];
@@ -150,6 +141,7 @@ export const useGame = () => {
     //最後に手番を切り替える
     setTurnColor(3 - turnColor);
   };
+
   console.table(board);
 
   return { board, onClick };
